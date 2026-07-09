@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reasonix Chat</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#1a1a2e;--bg2:#16213e;--bg3:#0f3460;--accent:#e94560;--text:#eaeaea;--text2:#a0a0b0;--border:#2a2a4a;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;--mono:'Consolas','Courier New',monospace;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+#app{display:flex;flex-direction:column;height:100vh;}
+
+/* Header */
+#header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;}
+#header h1{font-size:16px;color:var(--accent);}
+#header-actions{display:flex;gap:6px;}
+.btn-sm{padding:4px 12px;border:1px solid var(--border);border-radius:4px;background:var(--bg3);color:var(--text);cursor:pointer;font-size:12px;}
+.btn-sm:hover{background:var(--accent);color:#fff;}
+
+/* Connection bar */
+#conn-bar{display:flex;gap:8px;padding:8px 16px;background:var(--bg3);flex-shrink:0;align-items:center;flex-wrap:wrap;font-size:13px;}
+#conn-bar input{padding:5px 8px;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--text);font-size:12px;flex:1;min-width:80px;}
+#conn-bar input::placeholder{color:var(--text2);}
+#conn-status{font-size:11px;padding:2px 8px;border-radius:3px;}
+#conn-status.connected{background:#1b5e20;color:#81c784;}
+#conn-status.disconnected{background:#b71c1c;color:#ef9a9a;}
+.btn-connect{padding:5px 16px;border:none;border-radius:3px;background:var(--accent);color:#fff;cursor:pointer;font-size:12px;font-weight:600;}
+.btn-connect:hover{opacity:0.85;}
+
+/* Chat messages */
+#chat-area{flex:1;overflow-y:auto;padding:12px 16px;}
+#chat-area::-webkit-scrollbar{width:5px;}
+#chat-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.msg{margin-bottom:8px;padding:8px 12px;border-radius:6px;font-size:13px;line-height:1.5;white-space:pre-wrap;word-break:break-word;}
+.msg.user{background:var(--bg3);margin-left:20%;}
+.msg.assistant{background:var(--bg2);margin-right:20%;border:1px solid var(--border);}
+.msg.system{text-align:center;color:var(--text2);font-size:11px;padding:4px;}
+.msg .meta{font-size:10px;color:var(--text2);margin-bottom:4px;}
+
+/* Input */
+#input-area{display:flex;gap:8px;padding:8px 16px;background:var(--bg2);border-top:1px solid var(--border);flex-shrink:0;}
+#chat-input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);font-size:13px;outline:none;resize:none;font-family:var(--font);}
+#chat-input:focus{border-color:var(--accent);}
+#send-btn{padding:8px 20px;border:none;border-radius:4px;background:var(--accent);color:#fff;cursor:pointer;font-size:13px;}
+#send-btn:hover{opacity:0.85;}
+#send-btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* Output areas */
+.msg-output{padding:6px 10px;margin:4px 0;background:#0d0d1a;border-radius:3px;font-family:var(--mono);font-size:12px;overflow-x:auto;color:#d4d4d4;}
+.msg-output.error{border-left:3px solid var(--accent);}
+
+/* Welcome */
+#welcome{display:flex;flex:1;align-items:center;justify-content:center;color:var(--text2);text-align:center;flex-direction:column;gap:8px;}
+#welcome h2{color:var(--accent);font-size:20px;}
+#welcome p{font-size:13px;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <h1>� Reasonix Chat</h1>
+    <div id="header-actions">
+      <button class="btn-sm" onclick="newChat()">� New Chat</button>
+      <button class="btn-sm" onclick="toggleHistory()">� History</button>
+    </div>
+  </div>
+
+  <div id="conn-bar">
+    <input id="host" placeholder="Host" value="">
+    <input id="user" placeholder="User" value="">
+    <input id="pwd" placeholder="Password" type="password">
+    <input id="workdir" placeholder="Workdir" value="/cluster2/huanglab/rchen">
+    <button class="btn-connect" onclick="connect()" id="connect-btn">Connect</button>
+    <span id="conn-status" class="disconnected">Disconnected</span>
+  </div>
+
+  <div id="chat-area">
+    <div id="welcome">
+      <h2>Reasonix Chat</h2>
+      <p>Connect to your remote server to get started.</p>
+      <p style="font-size:11px;">Enter host, user, password and click Connect</p>
+    </div>
+  </div>
+
+  <div id="input-area">
+    <textarea id="chat-input" rows="2" placeholder="Ask me to do something..." disabled></textarea>
+    <button id="send-btn" disabled onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script src="/reasonix/static/chat.js"></script>
+</body>
+</html>
