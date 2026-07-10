@@ -5,19 +5,32 @@ import os
 here = os.path.abspath(os.path.dirname(__file__))
 
 # Read version from package.json
-with open(os.path.join(here, "package.json")) as f:
+with open(os.path.join(here, "package.json"), encoding="utf-8") as f:
     pkg = json.load(f)
     version = pkg["version"]
 
-# Ensure the jupyterlab extension metadata is attached
+# Read long description safely
+try:
+    with open(os.path.join(here, "README.md"), encoding="utf-8") as f:
+        long_desc = f.read()
+except Exception:
+    long_desc = pkg["description"]
+
+# Jupyter Lab extension files to bundle
+labext_files = [
+    "package.json",
+    "install.json",
+    "lib/index.js",
+]
+
 setup(
     name=pkg["name"],
     version=version,
     description=pkg["description"],
-    long_description=open("README.md", encoding="utf-8").read(),
+    long_description=long_desc,
     long_description_content_type="text/markdown",
-    author=pkg.get("author", "Reasonix"),
-    license=pkg.get("license", "MIT"),
+    author="Reasonix",
+    license="MIT",
     url="https://github.com/orangepyt123456/jupyter-reasonix",
     packages=find_packages(),
     include_package_data=True,
@@ -28,20 +41,18 @@ setup(
         ],
     },
     data_files=[
-        ("share/jupyter/labextensions/jupyter-reasonix", [
-            "package.json",
-            "install.json",
-            "lib/index.js",
-        ]),
+        ("share/jupyter/labextensions/jupyter-reasonix", labext_files),
         ("etc/jupyter/jupyter_server_config.d", [
             "jupyter-config/jupyter_reasonix.json",
         ]),
     ],
     install_requires=[
-        "ssh-ide-mcp>=2.0.0",
         "jupyter-server>=2.0.0",
         "jupyterlab>=4.0.0",
     ],
+    extras_require={
+        "ssh": ["ssh-ide-mcp>=2.0.1"],
+    },
     python_requires=">=3.9",
     entry_points={
         "jupyter_server_extension": [

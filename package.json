@@ -1,22 +1,22 @@
 {
     "name": "jupyter-reasonix",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "description": "Reasonix Chat — SSH remote server management through conversation, embedded in Jupyter Lab",
-    "author": "Reasonix",
+    "keywords": ["jupyter", "jupyterlab", "jupyterlab-extension", "ssh", "reasonix", "chat"],
     "license": "MIT",
     "main": "lib/index.js",
-    "keywords": ["jupyter", "jupyterlab", "jupyterlab-extension", "ssh", "reasonix", "chat"],
     "files": ["lib/**/*", "install.json"],
     "jupyterlab": {
-        "extension": true,
-        "outputDir": "jupyter_reasonix/static"
+        "extension": "lib/index.js"
     },
     "scripts": {
-        "build": "jupyter labextension build .",
-        "clean": "rimraf lib"
+        "build": "tsc",
+        "clean": "rimraf lib",
+        "watch": "tsc -w"
     },
     "dependencies": {
         "@jupyterlab/application": "^4.0.0",
+        "@jupyterlab/apputils": "^4.0.0",
         "@lumino/widgets": "^2.0.0"
     }
 }
